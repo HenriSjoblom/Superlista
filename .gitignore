@@ -3,3 +3,4 @@ __pycache__
 /geckodriver.exe
 *.pyc
 /geckodriver.log
+.idea/
