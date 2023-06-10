@@ -1,13 +1,15 @@
 from django.core import mail
 from selenium.webdriver.common.keys import Keys
 import re
+from unittest import skip
 
 from .base import FunctionalTest
 
 TEST_EMAIL = 'edith@example.com'
-SUBJECT = 'Your login link for Superlists'
+SUBJECT = 'Your login link for Superlista'
 
 
+#@skip
 class LoginTest(FunctionalTest):
 
     def test_can_get_email_link_to_log_in(self):
