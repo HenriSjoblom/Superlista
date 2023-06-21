@@ -27,6 +27,9 @@ class AuthenticateTest(TestCase):
         user = PasswordlessAuthenticationBackend().authenticate(token.uid)
         self.assertEqual(user, existing_user)
 
+
+class GetUserTest(TestCase):
+
     def test_gets_user_by_email(self):
         User.objects.create(email='another@example.com')
         desired_user = User.objects.create(email='edith@example.com')
