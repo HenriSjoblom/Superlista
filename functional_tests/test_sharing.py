@@ -28,6 +28,7 @@ class SharingTest(FunctionalTest):
         # Edith goes to the home page and starts a list
         self.browser = edith_browser
         self.browser.get(self.live_server_url)
+        self.wait_for(lambda: self.assertEqual(list_page.get_list_owner(), 'edith@example.com'))
         list_page = ListPage(self).add_list_item('Get help')
 
         # She notices a "Share this list" option
