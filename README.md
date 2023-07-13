@@ -4,4 +4,4 @@ This repository contains a web application developed using Test-Driven Developme
 
 The project serves as a demonstration of the skills and knowledge acquired through the [Obey The Testing Goat](https://www.obeythetestinggoat.com/) book. The app is accessible at [superlista.online](superlista.online), but please note that the server is not running by default. However, I am happy to start the server for you to experience the app firsthand.
 
-The following technologies and concepts were employed in the development of this project: Python, Django, JavaScript, jQuery, HTML, CSS, Bootstrap, Azure, Ubuntu, Nginx, Gunicorn, CI, Jenkins and TDD.
+The following technologies and concepts were employed in the development of this project: Python, Django, JavaScript, jQuery, HTML, CSS, Bootstrap, Azure, Ubuntu, Nginx, Gunicorn, CI, Jenkins, TDD and Fabric.
