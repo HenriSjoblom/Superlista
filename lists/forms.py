@@ -4,8 +4,8 @@ from django.core.exceptions import ValidationError
 from lists.models import Item, List
 
 
-EMPTY_ITEM_ERROR = "You can't have an empty list item"
-DUPLICATE_ITEM_ERROR = "You've already got this in your list"
+EMPTY_ITEM_ERROR = "Tehtävä ei voi olla tyhjä"
+DUPLICATE_ITEM_ERROR = "Tehtävä on jo listallasi"
 
 
 class ItemForm(forms.models.ModelForm):
@@ -13,9 +13,8 @@ class ItemForm(forms.models.ModelForm):
     class Meta:
         model = Item
         fields = ('text',)
-        widgets = {'text': forms.fields.TextInput(attrs={'placeholder': 'Enter a to-do item',
+        widgets = {'text': forms.fields.TextInput(attrs={'placeholder': 'Lisää tehtävä',
                                                          'class': 'form-control input-lg',}),
-
         }
         error_messages = {'text': {'required': EMPTY_ITEM_ERROR}}
 

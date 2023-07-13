@@ -21,7 +21,7 @@ class SendLoginEmailViewTest(TestCase):
 
         self.assertEqual(mock_send_mail.called, True)
         (subject, body, from_email, to_list), kwargs = mock_send_mail.call_args
-        self.assertEqual(subject, 'Your login link for Superlista')
+        self.assertEqual(subject, 'Sinun kirjautumislinkkisi Superlistaan')
         self.assertEqual(from_email, 'noreply@superlista')
         self.assertEqual(to_list, ['edith@example.com'])
 
@@ -33,7 +33,7 @@ class SendLoginEmailViewTest(TestCase):
         message = list(response.context['messages'])[0]
         self.assertEqual(
             message.message,
-            "Check your email, we've sent you a link you can use to log in."
+            "Tarkista sähköpostisi, lähetimme sinulle linkin, jonka avulla voit kirjautua sisään."
         )
         self.assertEqual(message.tags, "success")
 

@@ -32,7 +32,7 @@ class SharingTest(FunctionalTest):
 
         # She notices a "Share this list" option
         share_box = list_page.get_share_box()
-        self.assertEqual(share_box.get_attribute('placeholder'), 'your-friend@example.com')
+        self.assertEqual(share_box.get_attribute('placeholder'), 'lahetä-lista@example.com')
 
         # She shares her list.
         # The page updates to say that it's shared with Oniciferous:
@@ -54,5 +54,6 @@ class SharingTest(FunctionalTest):
         # When Edith refreshes the page, she sees Oniciferous's addition
         self.browser = edith_browser
         self.browser.refresh()
+
         list_page.wait_for_row_in_list_table('Hi Edith!', 2)
 

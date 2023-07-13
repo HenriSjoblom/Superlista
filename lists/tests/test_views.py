@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.utils.html import escape
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
+from django.urls import resolve
 import unittest
 from unittest.mock import patch, Mock
 
@@ -59,10 +60,7 @@ class ListViewTest(TestCase):
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
-        self.client.post(
-            f'/lists/{correct_list.id}/',
-            data={'text': 'A new item for an existing list'}
-        )
+        self.client.post(f'/lists/{correct_list.id}/', data={'text': 'A new item for an existing list'})
 
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
@@ -73,19 +71,13 @@ class ListViewTest(TestCase):
         other_list = List.objects.create()
         correct_list = List.objects.create()
 
-        response = self.client.post(
-            f'/lists/{correct_list.id}/',
-            data={'text': 'A new item for an existing list'}
-        )
+        response = self.client.post(f'/lists/{correct_list.id}/', data={'text': 'A new item for an existing list'})
 
         self.assertRedirects(response, f'/lists/{correct_list.id}/')
 
     def post_invalid_input(self):
         list_ = List.objects.create()
-        return self.client.post(
-            f'/lists/{list_.id}/',
-            data={'text': ''}
-        )
+        return self.client.post(f'/lists/{list_.id}/', data={'text': ''})
 
     def test_for_invalid_input_nothing_saved_to_db(self):
         self.post_invalid_input()
@@ -107,10 +99,7 @@ class ListViewTest(TestCase):
     def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
         list1 = List.objects.create()
         item1 = Item.objects.create(list=list1, text='textey')
-        response = self.client.post(
-            f'/lists/{list1.id}/',
-            data={'text': 'textey'}
-        )
+        response = self.client.post(f'/lists/{list1.id}/', data={'text': 'textey'})
 
         expected_error = escape(DUPLICATE_ITEM_ERROR)
         self.assertContains(response, expected_error)
@@ -124,7 +113,6 @@ class MyListsTest(TestCase):
         User.objects.create(email='a@b.com')
         response = self.client.get('/lists/users/a@b.com/')
         self.assertTemplateUsed(response, 'my_lists.html')
-
 
     def test_passes_correct_owner_to_template(self):
         User.objects.create(email='wrong@owner.com')
@@ -161,9 +149,7 @@ class NewListViewUnitTest(unittest.TestCase):
 
 
     @patch('lists.views.redirect')
-    def test_redirects_to_form_returned_object_if_form_valid(
-        self, mock_redirect, mockNewListForm
-    ):
+    def test_redirects_to_form_returned_object_if_form_valid(self, mock_redirect, mockNewListForm):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = True
 
@@ -174,18 +160,14 @@ class NewListViewUnitTest(unittest.TestCase):
 
 
     @patch('lists.views.render')
-    def test_renders_home_template_with_form_if_form_invalid(
-        self, mock_render, mockNewListForm
-    ):
+    def test_renders_home_template_with_form_if_form_invalid(self, mock_render, mockNewListForm):
         mock_form = mockNewListForm.return_value
         mock_form.is_valid.return_value = False
 
         response = new_list(self.request)
 
         self.assertEqual(response, mock_render.return_value)
-        mock_render.assert_called_once_with(
-            self.request, 'home.html', {'form': mock_form}
-        )
+        mock_render.assert_called_once_with(self.request, 'home.html', {'form': mock_form})
 
 
 class NewListViewIntegratedTest(TestCase):
@@ -207,5 +189,39 @@ class NewListViewIntegratedTest(TestCase):
         self.client.post('/lists/new', data={'text': 'new item'})
         list_ = List.objects.first()
         self.assertEqual(list_.owner, user)
+
+
+class ShareListTest(TestCase):
+
+
+    def test_POST_redirects_to_lists_page(self):
+        shared_list = List.objects.create()
+        share_with_email = 'new_user@shared.com'
+        response = self.client.post(f'/lists/{shared_list.id}/share', data={'sharee':share_with_email})
+        self.assertEqual(response.resolver_match.view_name, 'share_list')
+        self.assertRedirects(response, f'/lists/{shared_list.id}/')
+
+    def share_with_user(self,shared_list, email):
+        response = self.client.post(f'/lists/{shared_list.id}/share', data={'sharee': email})
+        user = User.objects.get(email=email)
+        self.assertIn(user, shared_list.shared_with.all())
+
+    def test_share_list_with_multiple_users(self):
+
+        new_list1 = List.objects.create()
+        shared_list = List.objects.create()
+        share_with_email1 = 'new_user1@shared.com'
+        self.share_with_user(shared_list, share_with_email1)
+        self.assertEqual(shared_list.shared_with.all().count(), 1)
+
+        new_list2 = List.objects.create()
+        share_with_email2 = 'new_user2@shared.com'
+        self.share_with_user(shared_list, share_with_email2)
+        self.assertEqual(shared_list.shared_with.all().count(), 2)
+
+        new_list3 = List.objects.create()
+        share_with_email3 = 'new_user3@shared.com'
+        self.share_with_user(shared_list, share_with_email3)
+        self.assertEqual(shared_list.shared_with.all().count(), 3)
 
 

@@ -49,7 +49,7 @@ class ItemValidationTest(FunctionalTest):
         self.get_item_input_box().send_keys(Keys.ENTER)
 
         # She sees a helpful error message
-        self.wait_for(lambda: self.assertEqual(self.get_error_element().text,"You've already got this in your list"))
+        self.wait_for(lambda: self.assertEqual(self.get_error_element().text, "Tehtävä on jo listallasi"))
 
     def test_error_messages_are_cleared_on_input(self):
         # Edith starts a list and causes a validation error:

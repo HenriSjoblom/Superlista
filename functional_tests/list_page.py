@@ -2,7 +2,7 @@ from selenium.webdriver.common.keys import Keys
 from .base import wait
 
 
-class ListPage(object):
+class ListPage:
 
     def __init__(self, test):
         self.test = test

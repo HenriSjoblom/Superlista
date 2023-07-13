@@ -10,10 +10,10 @@ def send_login_email(request):
     email = request.POST['email']
     token = Token.objects.create(email=email)
     url = request.build_absolute_uri(reverse('login') + '?token=' + str(token.uid))
-    message_body = f'Use this link to log in:\n\n{url}'
-    send_mail('Your login link for Superlista', message_body, 'noreply@superlista', [email])
+    message_body = f'Käytä tätä linkkiä kirjautuaksesi sisään:\n\n{url}'
+    send_mail('Sinun kirjautumislinkkisi Superlistaan', message_body, 'noreply@superlista', [email])
 
-    messages.success(request, "Check your email, we've sent you a link you can use to log in.")
+    messages.success(request, "Tarkista sähköpostisi, lähetimme sinulle linkin, jonka avulla voit kirjautua sisään.")
     return redirect('/')
 
 

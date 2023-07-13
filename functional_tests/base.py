@@ -3,6 +3,7 @@ from django.conf import settings
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 import time
 import os
 from datetime import datetime
@@ -31,7 +32,9 @@ def wait(fn):
 class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        firefox_options = FirefoxOptions()
+        firefox_options.add_argument("--disable-extensions")
+        self.browser = webdriver.Firefox(firefox_options=firefox_options)
         self.staging_server = os.environ.get('STAGING_SERVER')
         if self.staging_server:
             self.live_server_url = 'http://' + self.staging_server

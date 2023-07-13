@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth import get_user_model
 
 from lists.forms import ItemForm, ExistingListItemForm, NewListForm
-from lists.models import Item, List
+from lists.models import List
 
 User = get_user_model()
 
@@ -32,4 +32,16 @@ def view_list(request, list_id):
 
 def my_lists(request, email):
     owner = User.objects.get(email=email)
-    return render(request, 'my_lists.html', {'owner': owner})
+    shared_lists = List.get_shared_lists(owner)
+    return render(request, 'my_lists.html', {'owner': owner, 'shared_lists': shared_lists})
+
+
+def share_list(request, list_id):
+    email = request.POST['sharee']
+    list_ = List.objects.get(id=list_id)
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        user = User.objects.create(email=email)
+    list_.share_list(user)
+    return redirect(list_)
