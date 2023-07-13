@@ -65,7 +65,7 @@ class ItemValidationTest(FunctionalTest):
         # She starts typing in the input box to clear the error
         try:
             self.get_item_input_box().send_keys('a')
-        except:
+        except StaleElementReferenceException:
             self.get_item_input_box().send_keys('a')
 
         # She is pleased to see that the error message disappears
