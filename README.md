@@ -16,7 +16,7 @@ The project serves as a demonstration of the skills and knowledge acquired throu
   - Ubuntu
   - Nginx
   - Gunicorn
-  - Facbric
+  - Fabric
   - CI
   - Jenkins
   - TDD
